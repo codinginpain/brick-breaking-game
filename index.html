@@ -22,9 +22,31 @@
     var dy = -2; // moving y coordinates
     var ballRadius = 10;
 
-    function drawBall() {
+    var paddleHeight = 10; 
+    var paddleWidth = 75;
+    var paddleX = (canvas.width - paddleWidth) / 2; //paddle's coordinate x
+
+    var rightPressed = false; //keyboard left and right
+    var leftPressed = false;
+
+    var ballColor = ""; 
+
+
+    function drawBall(boll) {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI*2); //center of cercle coordinates x,y  / radius / start,end angle / Circumference / default(false) clock wise
+        if(ballColor != "") {
+            ctx.fillStyle = ballColor;
+        }else {
+            ctx.fillStyle = "#0095DD";
+        }
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
@@ -33,11 +55,54 @@
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);   // clear from leftTop (x,y) rightBottom(x,y)
         drawBall();
+        drawPaddle();
         x += dx;
         y += dy;
+        if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) { // without 'ballRadius' the code will workd when the center of ball touch walls
+            dx = -dx;
+            ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
+        }
+
+        if(y + dy > canvas.height - ballRadius|| y + dy < ballRadius) {
+            dy = -dy;
+            ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
+        }
+
+        if(rightPressed) {
+            paddleX += 7;
+            if(paddleX + paddleWidth > canvas.width) {
+                paddleX = cnavas.width - paddleWidth;
+            }
+        }else if(leftPressed) {
+            paddleX -= 7;
+            if(paddleX < 0) {
+                paddleX = 0;
+            }
+        }
     }
+
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+    
+    function keyDownHandler(e) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
+            rightPressed = true;
+        }else if(e.key == "Left" || e.key == "ArrowLeft") {
+            leftPressed = true;
+        }
+    }
+
+    function keyUpHandler(e) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
+            rightPressed = false;
+        }else if(e.key == "Left" || e.key == "ArrowLeft") {
+            leftPressed = false;
+        }
+    }
+
     setInterval(draw, 10);
+
+    //https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Paddle_and_keyboard_controls
 </script>
-https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Bounce_off_the_walls
 </body>
 </html>
