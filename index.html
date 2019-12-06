@@ -23,7 +23,7 @@
     var ballRadius = 10;
 
     var paddleHeight = 10; 
-    var paddleWidth = 75;
+    var paddleWidth = 100;
     var paddleX = (canvas.width - paddleWidth) / 2; //paddle's coordinate x
 
     var rightPressed = false; //keyboard left and right
@@ -56,6 +56,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);   // clear from leftTop (x,y) rightBottom(x,y)
         drawBall();
         drawPaddle();
+
         x += dx;
         y += dy;
         if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) { // without 'ballRadius' the code will workd when the center of ball touch walls
@@ -63,15 +64,23 @@
             ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
         }
 
-        if(y + dy > canvas.height - ballRadius|| y + dy < ballRadius) {
+        if(y + dy < ballRadius) {
             dy = -dy;
-            ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
+        }else if(y + dy > canvas.height-ballRadius) {
+            alert("GANME OVER");
+            document.location.reload();
+            clearInterval(interval); // Needed for Chrome to end game
         }
+        
+        // (y + dy > canvas.height - ballRadius|| y + dy < ballRadius) {
+        //     dy = -dy;
+        //     ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
+        // }
 
         if(rightPressed) {
             paddleX += 7;
             if(paddleX + paddleWidth > canvas.width) {
-                paddleX = cnavas.width - paddleWidth;
+                paddleX = canvas.width - paddleWidth;
             }
         }else if(leftPressed) {
             paddleX -= 7;
@@ -99,10 +108,7 @@
             leftPressed = false;
         }
     }
-
-    setInterval(draw, 10);
-
-    //https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Paddle_and_keyboard_controls
+    var interval = setInterval(draw, 10);
 </script>
 </body>
 </html>
