@@ -1,0 +1,31 @@
+//DB에서 map안에 리스트를 받아와서  for문 돌면서 큰 이미지를 뿌려야 하는 상황
+<script>
+let timer;
+let tagHtml = "";
+for(let i=0; i<map["someList"].length; i++) {
+  tagHtml += `<div>`;
+  tagHtml += `  <span>`;
+  tagHtml += `    <img src="dummyImages" data-src="${map["someList"].actualImgages}" class="imgTag">`;
+  tagHtml += `  </span>`;
+  tagHtml += `</div>`;
+
+  if(timer) {  //처음 1번만 피해가고 계속 탐
+    clearTimeout(tiemr);
+  }
+  timer = setTimeout(function() {
+    layLoad();
+  },500);
+}
+
+function lazyLoad() {
+  Array.from(document.querySelectorAll(".imgTag")).forEach(function(element) {
+    element.src = element.dataset.src;
+  });
+}
+</script>
+
+
+      <div class="placeholder" data-large="https://cdn-images-1.medium.com/max/1800/1*sg-uLNm73whmdOgKlrQdZA.jpeg">
+        <img class="img-small" src="https://cdn-images-1.medium.com/freeze/max/27/1*sg-uLNm73whmdOgKlrQdZA.jpeg?q=20">
+        <div style="padding-bottom: 66.6%;"></div>
+    </div>
