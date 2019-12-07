@@ -59,32 +59,20 @@
 
         x += dx;
         y += dy;
-        if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) { // without 'ballRadius' the code work when the center of ball touch walls
+        if(x > canvas.width - ballRadius || x < ballRadius) { // without 'ballRadius' the code work when the center of ball touch walls
             dx = -dx;
             ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
         }
 
-        if(y + dy < ballRadius) {
+        if(y < ballRadius) {
             dy = -dy;
-        }else if(y + dy > canvas.height-ballRadius) {
-            if(paddleX < x && x < paddleX+paddleWidth && y+ballRadius > canvas.height - paddleHeight) { //when the ball hit the paddle
-                console.log(y+ballRadius);
-                console.log(paddleHeight);
-                console.log(canvas.height - paddleHeight);
-                alert("dd");
-                dy = -dy;
-            }else {
-                alert("GANME OVER");
-                document.location.reload();
-                clearInterval(interval); // Needed for Chrome to end game
-            }
+        }else if(paddleX <= x + ballRadius && x -ballRadius <= paddleX+paddleWidth && y+ballRadius > canvas.height - paddleHeight) {
+            dy = -dy;
+        }else if(y >= canvas.height-ballRadius) {
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval); // Needed for Chrome to end game
         }
-        
-        // (y + dy > canvas.height - ballRadius|| y + dy < ballRadius) {
-        //     dy = -dy;
-        //     ballColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
-        // }
-
         if(rightPressed) {
             paddleX += 7;
             if(paddleX + paddleWidth > canvas.width) {
